@@ -65,9 +65,9 @@ Please return the response in the following JSON format:
     ];
 
     const requestBody: OpenAI.ChatCompletionCreateParamsNonStreaming = {
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         messages: messages,
-        max_tokens: 1000, // Adjust token limit as needed
+        max_tokens: 1000, 
     };
 
     const response = await retryWithBackoff(() => openai.chat.completions.create(requestBody));
