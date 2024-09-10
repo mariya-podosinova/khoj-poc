@@ -1,5 +1,3 @@
-// types.ts
-
 export interface Project {
     name: string;
     createdDate: string;
@@ -19,7 +17,7 @@ export interface File {
     researcher: string;
 }
 
-export const defaultPersona = {
+export const defaultPersona: Persona = {
     name: "Participant 1",
     role: "Primary persona",
     background: "Participant 1 is a 38-year-old professional living in the heart of London with their spouse, Emily. As a high-ranking executive in a multinational corporation, Participant 1’s life is a blend of high-stakes business meetings, frequent travel, and quality time with family. They enjoy the cultural vibrancy of London, often attending theater performances, dining at upscale restaurants, and engaging in weekend getaways to the countryside.",
@@ -74,7 +72,6 @@ export interface Insight {
     keyInsight: string;
 }
 
-
 export interface FileContextType {
     uploadedFiles: File[];
     setUploadedFiles: React.Dispatch<React.SetStateAction<File[]>>;
@@ -87,8 +84,8 @@ export interface FileContextType {
     setThemes: React.Dispatch<React.SetStateAction<{ broaderTheme: string, subTheme: string, code: string, occurrences: number }[]>>;
     insights: string;
     setInsights: React.Dispatch<React.SetStateAction<string>>;
-    persona: typeof defaultPersona[]; // Update this line to be an array
-    setPersona: React.Dispatch<React.SetStateAction<typeof defaultPersona[]>>; // Update this line to be an array
+    persona: Persona[]; // Updated to be an array of Persona
+    setPersona: React.Dispatch<React.SetStateAction<Persona[]>>; // Updated to be an array of Persona
     objectives: Objectives;
     setObjectives: React.Dispatch<React.SetStateAction<Objectives>>;
 }

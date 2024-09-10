@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { Insight } from '../types';  
 
 const openai = new OpenAI({
     apiKey: import.meta.env.VITE_OPENAI_API_KEY,
@@ -15,8 +16,8 @@ export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, dela
     }
 };
 
-export const createInsights = async (themes: { broaderTheme: string, subTheme: string, code: string, occurrences: number }[]): Promise<{ broaderTheme: string, subThemes: { subTheme: string, code: string, occurrences: number }[], keyInsight: string }[]> => {
-    const insights = [];
+export const createInsights = async (themes: { broaderTheme: string, subTheme: string, code: string, occurrences: number }[]): Promise<Insight[]> => {
+    const insights: Insight[] = [];
     
     // Group themes by broaderTheme
     const groupedThemes = themes.reduce((acc, theme) => {
@@ -40,7 +41,7 @@ export const createInsights = async (themes: { broaderTheme: string, subTheme: s
         // Sort sub-themes by occurrences in descending order and get the top 3
         const topSubThemes = subThemes.sort((a, b) => b.occurrences - a.occurrences).slice(0, 3);
 
-        const messages = [
+        const messages: OpenAI.ChatCompletionMessageParam[] = [
             { role: "system", content: "You are a helpful assistant." },
             {
                 role: "user", content: `Combine qualitative and quantitative data to identify key insights. Determine the most critical findings that impact the user experience. Here is the data: ${JSON.stringify(topSubThemes)}. 
@@ -61,7 +62,7 @@ Please return the response in the following JSON format:
             },
         ];
 
-        const requestBody = {
+        const requestBody: OpenAI.ChatCompletionCreateParamsNonStreaming = {
             model: "gpt-3.5-turbo",
             messages: messages,
             max_tokens: 800, // Adjust token limit as needed
@@ -86,14 +87,14 @@ Please return the response in the following JSON format:
                 jsonString = content.substring(jsonStart, jsonEnd).trim();
             }
 
-            const insightData = JSON.parse(jsonString);
+            const insightData = JSON.parse(jsonString) as Insight;
             // Add broaderTheme to the insightData
             insightData.broaderTheme = broaderTheme;
             insights.push(insightData);
 
         } catch (error) {
             console.error("Error parsing OpenAI response:", error);
-            console.error("Response content (trimmed):", response.choices[0].message.content.trim());
+            console.error("Response content (trimmed):", response.choices[0]?.message?.content?.trim());
             throw new Error("Invalid JSON response from OpenAI");
         }
     }

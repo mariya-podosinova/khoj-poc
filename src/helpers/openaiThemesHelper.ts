@@ -5,6 +5,22 @@ const openai = new OpenAI({
     dangerouslyAllowBrowser: true,
 });
 
+interface Message {
+    role: "system" | "user" | "assistant";
+    content: string;
+}
+
+interface ChatCompletionCreateParamsNonStreaming {
+    model: string;
+    messages: Message[];
+    max_tokens?: number;
+    temperature?: number;
+    top_p?: number;
+    frequency_penalty?: number;
+    presence_penalty?: number;
+    stop?: string[];
+}
+
 export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, delay = 1000): Promise<any> => {
     try {
         return await fn();
@@ -18,7 +34,7 @@ export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, dela
 export const createThemes = async (extractedTexts: string[], objective: string): Promise<{ broaderTheme: string, subTheme: string, code: string, occurrences: number }[]> => {
     const themes: { broaderTheme: string, subTheme: string, code: string, occurrences: number }[] = [];
     for (const extractedText of extractedTexts) {
-        const messages: ChatCompletionMessageParam[] = [
+        const messages: Message[] = [
             { role: "system", content: "You are a helpful assistant." },
             {
                 role: "user",

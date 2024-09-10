@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { Persona } from '../types';  
 
 const openai = new OpenAI({
     apiKey: import.meta.env.VITE_OPENAI_API_KEY,
@@ -15,8 +16,8 @@ export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, dela
     }
 };
 
-export const createPersona = async (insights: any[]): Promise<any> => {
-    const messages = [
+export const createPersona = async (insights: any[]): Promise<{ personas: Persona[] }> => {
+    const messages: OpenAI.ChatCompletionMessageParam[] = [
         { role: "system", content: "You are a helpful assistant." },
         {
             role: "user", content: `Based on the insights and data, create detailed primary and secondary user personas that represent the target audience. Exclude names and roles. Include demographic information, goals, pain points, user needs, and behaviors for each persona. Here is the data: ${JSON.stringify(insights)}.
@@ -55,7 +56,7 @@ Please return the response in the following JSON format:
         },
     ];
 
-    const requestBody = {
+    const requestBody: OpenAI.ChatCompletionCreateParamsNonStreaming = {
         model: "gpt-3.5-turbo",
         messages: messages,
         max_tokens: 1000, // Adjust token limit as needed
@@ -67,7 +68,7 @@ Please return the response in the following JSON format:
         const content = response.choices[0].message.content;
         const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
         const jsonString = jsonMatch ? jsonMatch[1].trim() : content.trim();
-        const personaData = JSON.parse(jsonString);
+        const personaData = JSON.parse(jsonString) as { personas: Persona[] };
 
         if (personaData.personas.length !== 2) {
             throw new Error("Expected exactly two personas in the response.");
@@ -81,23 +82,24 @@ Please return the response in the following JSON format:
 
         return personaData;
     } catch (error) {
-        console.error("Error parsing JSON response:", error.message);
+        console.error("Error parsing OpenAI response:", error);
+        console.error("Response content (trimmed):", response.choices[0]?.message?.content?.trim());
         throw new Error("Invalid JSON response from OpenAI");
     }
 };
 
-const replaceNameInDescription = (persona: any, placeholder: string) => {
+const replaceNameInDescription = (persona: Persona, placeholder: string): Persona => {
     const nameRegex = /[A-Z][a-z]+ [A-Z][a-z]+/; // Simple regex to match "First Last" names
-    for (const key in persona) {
-        if (typeof persona[key] === 'string') {
-            persona[key] = persona[key].replace(nameRegex, placeholder);
-        } else if (typeof persona[key] === 'object') {
-            for (const subKey in persona[key]) {
-                if (typeof persona[key][subKey] === 'string') {
-                    persona[key][subKey] = persona[key][subKey].replace(nameRegex, placeholder);
-                }
-            }
-        }
-    }
+
+    // Helper function to replace names in a string
+    const replaceInString = (str: string) => str.replace(nameRegex, placeholder);
+
+    // Replace names in strings and objects
+    persona.background = replaceInString(persona.background);
+    persona.needs = replaceInString(persona.needs);
+    persona.goals = replaceInString(persona.goals);
+    persona.painPoints = replaceInString(persona.painPoints);
+    persona.socialMedia = replaceInString(persona.socialMedia);
+
     return persona;
 };
