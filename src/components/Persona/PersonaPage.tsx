@@ -4,7 +4,7 @@ import { useFileContext } from '../../FileContext';
 import { createPersona } from '../../helpers/openaiPersonaHelper';
 import './PersonaPage.css';
 
-const PersonaPage: React.FC = () => {
+const PersonaPage = () => {
     const { currentProject, insights, persona, setPersona } = useFileContext();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ const PersonaPage: React.FC = () => {
             try {
                 const response = await fetch('https://randomuser.me/api/?results=2');
                 const data = await response.json();
-                setImageUrls(data.results.map((result: any) => result.picture.large));
+                setImageUrls(data.results.map((result) => result.picture.large));
             } catch (error) {
                 console.error('Error fetching images:', error);
             }
@@ -34,7 +34,7 @@ const PersonaPage: React.FC = () => {
         try {
             const personaData = await createPersona(JSON.parse(insights));
             setPersona(personaData.personas); // Set both personas
-        } catch (error: any) {
+        } catch (error) {
             console.error("Error creating persona:", error.message);
             alert("An error occurred while creating the persona. Check the console for more details.");
         } finally {
@@ -54,6 +54,15 @@ const PersonaPage: React.FC = () => {
 
     const handleContinue = () => {
         navigate('/documents');
+    };
+
+    const renderNeeds = (needs: string[]) => {
+        if (!Array.isArray(needs)) {
+            return <p>No needs data available</p>;
+        }
+        return needs.map((need, idx) => (
+            <p key={idx} className="needs-item">{need}</p>
+        ));
     };
 
     if (!persona) {
@@ -84,7 +93,7 @@ const PersonaPage: React.FC = () => {
         <div className="persona-page p-6">
             <h1 className="text-2xl font-bold mb-2">Persona - {currentProject.name}</h1>
             <p className="text-gray-600 mb-6">Details of the project</p>
-            {persona.map((p: any, index: number) => (
+            {persona.map((p, index) => (
                 <div key={index} className="persona-container mb-12">
                     <h2 className="persona-title">
                         {p.name} - <span className="persona-role">{p.role}</span>
@@ -116,9 +125,7 @@ const PersonaPage: React.FC = () => {
                             <div className="right-column">
                                 <div className="persona-section needs-section">
                                     <h3 className="font-bold">Needs</h3>
-                                    {p.needs.split(',').map((need: string, idx: number) => (
-                                        <p key={idx} className="needs-item">{need.trim()}</p>
-                                    ))}
+                                    {renderNeeds(p.needs)}
                                 </div>
                             </div>
                         </div>
@@ -129,7 +136,7 @@ const PersonaPage: React.FC = () => {
                             </div>
                             <div className="persona-section">
                                 <h3 className="font-bold">Pain Points</h3>
-                                {p.painPoints.split(',').map((painPoint: string, idx: number) => (
+                                {p.painPoints.split(', ').map((painPoint, idx) => (
                                     <p key={idx} className="pain-points-item">{painPoint.trim()}</p>
                                 ))}
                             </div>

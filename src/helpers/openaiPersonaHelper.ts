@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { Persona } from '../types';  
+import { Persona } from '../types';
 
 const openai = new OpenAI({
     apiKey: import.meta.env.VITE_OPENAI_API_KEY,
@@ -33,7 +33,11 @@ Please return the response in the following JSON format:
         "maritalStatus": "<maritalStatus>",
         "accessibility": "<accessibility>"
       },
-      "needs": "<needs>",
+      "needs": [
+        "<key>: <description>",
+        "<key>: <description>",
+        "<key>: <description>"
+      ],
       "goals": "<goals>",
       "painPoints": "<painPoints>",
       "socialMedia": "<socialMedia>"
@@ -46,7 +50,11 @@ Please return the response in the following JSON format:
         "maritalStatus": "<maritalStatus>",
         "accessibility": "<accessibility>"
       },
-      "needs": "<needs>",
+      "needs": [
+        "<key>: <description>",
+        "<key>: <description>",
+        "<key>: <description>"
+      ],
       "goals": "<goals>",
       "painPoints": "<painPoints>",
       "socialMedia": "<socialMedia>"
@@ -57,7 +65,7 @@ Please return the response in the following JSON format:
     ];
 
     const requestBody: OpenAI.ChatCompletionCreateParamsNonStreaming = {
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         messages: messages,
         max_tokens: 1000, // Adjust token limit as needed
     };
@@ -65,7 +73,7 @@ Please return the response in the following JSON format:
     const response = await retryWithBackoff(() => openai.chat.completions.create(requestBody));
 
     try {
-        const content = response.choices[0].message.content;
+        const content = response.choices[0]?.message?.content || '';
         const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
         const jsonString = jsonMatch ? jsonMatch[1].trim() : content.trim();
         const personaData = JSON.parse(jsonString) as { personas: Persona[] };
@@ -82,24 +90,8 @@ Please return the response in the following JSON format:
 
         return personaData;
     } catch (error) {
-        console.error("Error parsing OpenAI response:", error);
-        console.error("Response content (trimmed):", response.choices[0]?.message?.content?.trim());
-        throw new Error("Invalid JSON response from OpenAI");
+      console.error("Error parsing OpenAI response:", error);
+      console.error("Response content (trimmed):", response.choices[0]?.message?.content?.trim());
+      throw new Error("Invalid JSON response from OpenAI");
     }
-};
-
-const replaceNameInDescription = (persona: Persona, placeholder: string): Persona => {
-    const nameRegex = /[A-Z][a-z]+ [A-Z][a-z]+/; // Simple regex to match "First Last" names
-
-    // Helper function to replace names in a string
-    const replaceInString = (str: string) => str.replace(nameRegex, placeholder);
-
-    // Replace names in strings and objects
-    persona.background = replaceInString(persona.background);
-    persona.needs = replaceInString(persona.needs);
-    persona.goals = replaceInString(persona.goals);
-    persona.painPoints = replaceInString(persona.painPoints);
-    persona.socialMedia = replaceInString(persona.socialMedia);
-
-    return persona;
 };
