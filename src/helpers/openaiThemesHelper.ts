@@ -1,11 +1,24 @@
-import OpenAI from 'openai';
+import { OpenAI } from 'openai';
 
+// Initialize OpenAI client with proper configuration
 const openai = new OpenAI({
     apiKey: import.meta.env.VITE_OPENAI_API_KEY,
     dangerouslyAllowBrowser: true,
 });
 
-export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, delay = 1000): Promise<any> => {
+// Type definitions for the API response
+interface Theme {
+    broaderTheme: string;
+    subThemes: {
+        broaderTheme: string;
+        subTheme: string;
+        code: string;
+        occurrences: number;
+    }[];
+}
+
+// Retry function with exponential backoff
+export const retryWithBackoff = async <T>(fn: () => Promise<T>, retries = 5, delay = 1000): Promise<T> => {
     try {
         return await fn();
     } catch (error: any) {
@@ -15,8 +28,10 @@ export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, dela
     }
 };
 
-export const createThemes = async (extractedTexts: string[], objective: string): Promise<{ broaderTheme: string, subTheme: string, code: string, occurrences: number }[]> => {
-    const themes: { broaderTheme: string, subTheme: string, code: string, occurrences: number }[] = [];
+// Create themes from extracted texts and objectives
+export const createThemes = async (extractedTexts: string[], objective: string): Promise<Theme[]> => {
+    const themes: Theme[] = [];
+    
     for (const extractedText of extractedTexts) {
         const messages = [
             { role: "system", content: "You are a helpful assistant." },
@@ -27,7 +42,7 @@ export const createThemes = async (extractedTexts: string[], objective: string):
                 - "code": Detailed reasons or actions mentioned by participants that illustrate the sub-themes.
                 - "occurrences": The number of times this theme was mentioned.
                 The array should be based on the following objective: ${objective}. Here is the transcript: ${extractedText}`
-            },
+            }
         ];
 
         const requestBody = {
@@ -37,14 +52,10 @@ export const createThemes = async (extractedTexts: string[], objective: string):
             temperature: 0.7 
         };
 
-        const response = await retryWithBackoff(() => openai.chat.completions.create({
-            model: requestBody.model,
-            messages: requestBody.messages,
-            max_tokens: requestBody.max_tokens,
-            temperature: requestBody.temperature
-        }));
+        // Make the API call with retry logic
+        const response = await retryWithBackoff(() => openai.chat.completions.create(requestBody));
 
-        let responseData;
+        let responseData: Theme[] = [];
         try {
             const content = response.choices[0].message.content;
             const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
@@ -61,5 +72,6 @@ export const createThemes = async (extractedTexts: string[], objective: string):
             throw new Error("Invalid JSON response from OpenAI");
         }
     }
+    
     return themes;
 };
