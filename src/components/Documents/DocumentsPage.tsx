@@ -4,7 +4,7 @@ import { jsPDF } from 'jspdf';
 import './DocumentsPage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
-import { Persona } from '../../types'; // Import Persona type
+import { Persona, Insight } from '../../types'; // Ensure correct import path
 
 const DocumentsPage: React.FC = () => {
     const { persona, insights, currentProject } = useFileContext();
@@ -63,7 +63,7 @@ const DocumentsPage: React.FC = () => {
                     `Age: ${persona.demographics.age}\nLocation: ${persona.demographics.location}\nMarital Status: ${persona.demographics.maritalStatus}\nAccessibility: ${persona.demographics.accessibility}`,
                     currentY
                 );
-                currentY = addContent('Needs:', persona.needs, currentY);
+                currentY = addContent('Needs:', persona.needs.join('\n'), currentY); // Join array elements for needs
                 currentY = addContent('Goals:', persona.goals, currentY);
                 currentY = addContent('Pain Points:', persona.painPoints, currentY);
                 addContent('Social Media:', persona.socialMedia, currentY);
@@ -76,10 +76,10 @@ const DocumentsPage: React.FC = () => {
         generatePDF(
             'Project Insights',
             (doc, addContent, currentY) => {
-                const insightsData = JSON.parse(insights);
-                insightsData.forEach((insight: any, index: number) => { // Use 'any' or define proper type for insights
+                const insightsData: Insight[] = JSON.parse(insights); // Cast JSON.parse to Insight[]
+                insightsData.forEach((insight, index) => {
                     currentY = addContent(`Insight ${index + 1}: ${insight.broaderTheme}`, '', currentY);
-                    insight.subThemes.forEach((subTheme: any) => { // Use 'any' or define proper type for subThemes
+                    insight.subThemes.forEach((subTheme) => {
                         currentY = addContent(
                             `${subTheme.subTheme}: ${subTheme.code} (${subTheme.occurrences} occurrences)`,
                             '',
