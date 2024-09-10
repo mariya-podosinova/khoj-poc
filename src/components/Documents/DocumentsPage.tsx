@@ -4,12 +4,12 @@ import { jsPDF } from 'jspdf';
 import './DocumentsPage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
-import { FileContextType, defaultPersona } from '../../types'; // Import defaultPersona
+import { Persona } from '../../types'; // Import Persona type
 
 const DocumentsPage: React.FC = () => {
-    const { persona, insights, currentProject } = useFileContext() as FileContextType;
+    const { persona, insights, currentProject } = useFileContext();
 
-    const generatePDF = (title: string, contentCallback: (doc: jsPDF, addContent: (title: string, content: string, startY: number) => number, startY: number) => void, fileName: string) => {
+    const generatePDF = (title: string, contentCallback: (doc: jsPDF, addContent: (title: string, content: string, startY: number) => number, currentY: number) => void, fileName: string) => {
         const doc = new jsPDF();
         const marginLeft = 10;
         const marginTop = 10;
@@ -51,7 +51,7 @@ const DocumentsPage: React.FC = () => {
         doc.save(fileName);
     };
 
-    const handleDownloadPersona = (persona: typeof defaultPersona, participantNumber: number) => {
+    const handleDownloadPersona = (persona: Persona, participantNumber: number) => {
         generatePDF(
             `Participant ${participantNumber}`,
             (doc, addContent, currentY) => {
@@ -77,9 +77,9 @@ const DocumentsPage: React.FC = () => {
             'Project Insights',
             (doc, addContent, currentY) => {
                 const insightsData = JSON.parse(insights);
-                insightsData.forEach((insight: { broaderTheme: string; subThemes: { subTheme: string; code: string; occurrences: number }[]; keyInsight: string }, index: number) => {
+                insightsData.forEach((insight: any, index: number) => { // Use 'any' or define proper type for insights
                     currentY = addContent(`Insight ${index + 1}: ${insight.broaderTheme}`, '', currentY);
-                    insight.subThemes.forEach((subTheme) => {
+                    insight.subThemes.forEach((subTheme: any) => { // Use 'any' or define proper type for subThemes
                         currentY = addContent(
                             `${subTheme.subTheme}: ${subTheme.code} (${subTheme.occurrences} occurrences)`,
                             '',

@@ -74,6 +74,7 @@ export interface Insight {
     keyInsight: string;
 }
 
+
 export interface FileContextType {
     uploadedFiles: File[];
     setUploadedFiles: React.Dispatch<React.SetStateAction<File[]>>;
@@ -86,8 +87,8 @@ export interface FileContextType {
     setThemes: React.Dispatch<React.SetStateAction<{ broaderTheme: string, subTheme: string, code: string, occurrences: number }[]>>;
     insights: string;
     setInsights: React.Dispatch<React.SetStateAction<string>>;
-    persona: Persona;
-    setPersona: React.Dispatch<React.SetStateAction<Persona>>;
+    persona: typeof defaultPersona[]; // Update this line to be an array
+    setPersona: React.Dispatch<React.SetStateAction<typeof defaultPersona[]>>; // Update this line to be an array
     objectives: Objectives;
     setObjectives: React.Dispatch<React.SetStateAction<Objectives>>;
 }
