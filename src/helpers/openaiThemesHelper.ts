@@ -18,10 +18,11 @@ export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, dela
 export const createThemes = async (extractedTexts: string[], objective: string): Promise<{ broaderTheme: string, subTheme: string, code: string, occurrences: number }[]> => {
     const themes: { broaderTheme: string, subTheme: string, code: string, occurrences: number }[] = [];
     for (const extractedText of extractedTexts) {
-        const messages = [
+        const messages: ChatCompletionMessageParam[] = [
             { role: "system", content: "You are a helpful assistant." },
             {
-                role: "user", content: `Based on the analysis of the transcripts, create a JSON array where each object has the following fields:
+                role: "user",
+                content: `Based on the analysis of the transcripts, create a JSON array where each object has the following fields:
                 - "broaderTheme": A general category encompassing multiple related sub-themes.
                 - "subTheme": Specific themes that fall under the broader category.
                 - "code": Detailed reasons or actions mentioned by participants that illustrate the sub-themes.
@@ -30,19 +31,14 @@ export const createThemes = async (extractedTexts: string[], objective: string):
             },
         ];
 
-        const requestBody = {
+        const requestBody: ChatCompletionCreateParamsNonStreaming = {
             model: "gpt-3.5-turbo",
             messages: messages,
-            max_tokens: 800, 
-            temperature: 0.7 
+            max_tokens: 800,
+            temperature: 0.7
         };
 
-        const response = await retryWithBackoff(() => openai.chat.completions.create({
-            model: requestBody.model,
-            messages: requestBody.messages,
-            max_tokens: requestBody.max_tokens,
-            temperature: requestBody.temperature
-        }));
+        const response = await retryWithBackoff(() => openai.chat.completions.create(requestBody));
 
         let responseData;
         try {
