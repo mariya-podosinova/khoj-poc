@@ -30,35 +30,26 @@ export const createThemes = async (extractedTexts: string[], objective: string):
             },
         ];
 
-        const requestBody = {
-            model: "gpt-3.5-turbo",
-            messages: messages,
-            max_tokens: 800, 
-            temperature: 0.7 
-        };
-
-        const response = await retryWithBackoff(() => openai.chat.completions.create({
-            model: requestBody.model,
-            messages: requestBody.messages,
-            max_tokens: requestBody.max_tokens,
-            temperature: requestBody.temperature
-        }));
-
-        let responseData;
         try {
+            const response = await retryWithBackoff(() => openai.chat.completions.create({
+                model: "gpt-3.5-turbo",
+                messages: messages,
+                max_tokens: 800,
+                temperature: 0.7,
+            }));
+
             const content = response.choices[0].message.content;
             const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
             if (jsonMatch && jsonMatch[1]) {
                 const jsonString = jsonMatch[1].trim();
-                responseData = JSON.parse(jsonString);
+                const responseData = JSON.parse(jsonString);
                 themes.push(...responseData);
             } else {
                 throw new Error("JSON data not found in the response.");
             }
         } catch (error) {
-            console.error("Error parsing OpenAI response:", error);
-            console.error("Response content (trimmed):", response.choices[0].message.content.trim());
-            throw new Error("Invalid JSON response from OpenAI");
+            console.error("Error processing OpenAI response:", error);
+            throw new Error("Failed to process OpenAI response");
         }
     }
     return themes;
