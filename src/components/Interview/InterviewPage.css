@@ -1,0 +1,149 @@
+.transcript-page {
+    padding: 24px;
+}
+
+.upload-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.upload-box{
+    border: 2px dashed #cbd5e1;
+}
+
+.upload-box, .uploaded-files-list {
+    width: 60%;
+    padding: 24px;
+    text-align: center;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    position: relative;
+}
+
+.upload-box-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.upload-box p {
+    margin: 0;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.recording-section {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.recording-title {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+    color: #f97316;
+    font-weight: bold;
+}
+
+.recording-button {
+    background-color: #9ca3af;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.recording-button:hover {
+    background-color: #6b7280;
+}
+
+.uploaded-files-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.uploaded-file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    background-color: #e5e7eb;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+}
+
+.file-name {
+    font-weight: bold;
+}
+
+.check-icon {
+    color: #10b981;
+    margin-left: 8px;
+}
+
+.file-actions {
+    display: flex;
+    align-items: center;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: color 0.3s;
+}
+
+.delete-button:hover {
+    color: #dc2626;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.back-button, .continue-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.back-button {
+    background-color: #d1d5db;
+    color: #374151;
+}
+
+.back-button:hover {
+    background-color: #9ca3af;
+}
+
+.continue-button {
+    background-color: #3b82f6;
+    color: #fff;
+}
+
+.continue-button:hover {
+    background-color: #2563eb;
+}

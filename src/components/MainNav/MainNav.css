@@ -1,0 +1,39 @@
+.main-nav {
+    width: 100%; /* Full width */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff; /* White background */
+    padding: 16px 24px; /* Padding for spacing */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+  }
+  
+  .main-nav .logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .main-nav .logo .icon {
+    font-size: 2rem; /* Large icon size */
+    color: #6a1b9a; /* Purple color for logo */
+    margin-right: 8px; /* Spacing between icon and text */
+  }
+  
+  .main-nav .user-settings {
+    display: flex;
+    align-items: center;
+  }
+  
+  .main-nav .user-settings .icon {
+    font-size: 1.5rem; /* Icon size */
+    color: #6a1b9a; /* Purple color for settings icon */
+    margin-right: 16px; /* Spacing between icon and avatar */
+  }
+  
+  .main-nav .user-settings img {
+    width: 40px; /* Avatar size */
+    height: 40px; /* Avatar size */
+    border-radius: 50%; /* Round avatar */
+  }
+  
+  

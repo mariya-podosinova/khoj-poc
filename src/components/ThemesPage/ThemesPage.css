@@ -1,0 +1,39 @@
+.themes-page {
+    padding: 2rem;
+ 
+}
+
+.themes-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.themes-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+    .themes-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.theme-card {
+    background-color: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sub-theme {
+    background-color: #f1f1f1;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+

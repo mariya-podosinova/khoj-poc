@@ -1,0 +1,52 @@
+.documents-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    background-color: #f9f9f9;
+    padding-top: 50px;
+    gap: 20px;
+}
+
+.documents-card {
+    text-align: center;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.documents-icon {
+    font-size: 5rem;
+    color: #d32f2f;
+    margin-bottom: 1rem;
+}
+
+.documents-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.persona-section, .insights-section {
+    margin-bottom: 1.5rem;
+}
+
+.persona-name, .insights-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.documents-download-button {
+    background-color: #d32f2f;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.documents-download-button:hover {
+    background-color: #b71c1c;
+}

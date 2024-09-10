@@ -1,0 +1,33 @@
+.sidebar {
+    background-color: #f7f7f7; /* Light grey background */
+    width: 250px; /* Fixed width */
+    height: 100vh; /* Full height */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Slight shadow for depth */
+  }
+  
+  .sidebar a {
+    text-decoration: none;
+    color: #999; /* Light grey color for inactive links */
+    margin: 10px 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-left: 3px solid transparent; /* Invisible border for alignment */
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+  }
+  
+  .sidebar a.active,
+  .sidebar a:hover {
+    background-color: #6a1b9a; /* Purple background for active/hover */
+    color: #fff; /* White color for active/hover links */
+    border-left: 3px solid #4a148c; /* Darker purple left border */
+  }
+  
+  .sidebar a .icon {
+    margin-right: 15px; /* Spacing between icon and text */
+  }
+  
+  
