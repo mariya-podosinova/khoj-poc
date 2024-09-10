@@ -40,7 +40,7 @@ export const createThemes = async (extractedTexts: string[], objective: string):
         ];
 
         const requestBody = {
-            model: "gpt-3.5-turbo",  // Correct model name
+            model: "gpt-4",  // Use the latest GPT model if available
             messages: messages,
             max_tokens: 800, 
             temperature: 0.7 
