@@ -1,3 +1,5 @@
+// types.ts
+
 export interface Project {
     name: string;
     createdDate: string;
@@ -33,9 +35,43 @@ export const defaultPersona = {
     socialMedia: "LinkedIn, Twitter"
 };
 
+export interface Persona {
+    name: string;
+    role: string;
+    background: string;
+    demographics: {
+        age: number;
+        location: string;
+        maritalStatus: string;
+        accessibility: string;
+    };
+    needs: string;
+    goals: string;
+    painPoints: string;
+    socialMedia: string;
+}
+
 export interface Objectives {
     main: string;
     additional: string;
+}
+
+export interface TextItem {
+    str: string;
+}
+
+export interface TextSectionProps {
+    content: string;
+}
+
+export interface Insight {
+    broaderTheme: string;
+    subThemes: {
+        subTheme: string;
+        code: string;
+        occurrences: number;
+    }[];
+    keyInsight: string;
 }
 
 export interface FileContextType {
@@ -46,20 +82,12 @@ export interface FileContextType {
     setCurrentProject: React.Dispatch<React.SetStateAction<Project>>;
     extractedText: string;
     setExtractedText: React.Dispatch<React.SetStateAction<string>>;
-    themes: { broaderTheme: string; subTheme: string; code: string; occurrences: number }[];
-    setThemes: React.Dispatch<React.SetStateAction<{ broaderTheme: string; subTheme: string; code: string; occurrences: number }[]>>;
+    themes: { broaderTheme: string, subTheme: string, code: string, occurrences: number }[];
+    setThemes: React.Dispatch<React.SetStateAction<{ broaderTheme: string, subTheme: string, code: string, occurrences: number }[]>>;
     insights: string;
     setInsights: React.Dispatch<React.SetStateAction<string>>;
-    persona: typeof defaultPersona;
-    setPersona: React.Dispatch<React.SetStateAction<typeof defaultPersona>>;
+    persona: Persona;
+    setPersona: React.Dispatch<React.SetStateAction<Persona>>;
     objectives: Objectives;
     setObjectives: React.Dispatch<React.SetStateAction<Objectives>>;
-}
-
-export interface TextItem {
-    str: string;
-}
-
-export interface TextSectionProps {
-    content: string;
 }

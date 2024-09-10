@@ -3,14 +3,16 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useFileContext } from '../../FileContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FileContextType, Insight } from '../../types';
 
 const InsightsPage: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { themes, currentProject, setInsights, insights: contextInsights } = useFileContext();
+    const { themes, currentProject, setInsights, insights: contextInsights } = useFileContext() as FileContextType;
+
     const project = location.state?.project || currentProject;
-    const [loading, setLoading] = useState(false);
-    const [insightsData, setInsightsData] = useState([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [insightsData, setInsightsData] = useState<Insight[]>([]); // Use the correct type for insightsData
 
     useEffect(() => {
         console.log("Themes:", themes);
@@ -20,7 +22,7 @@ const InsightsPage: React.FC = () => {
     useEffect(() => {
         if (contextInsights) {
             try {
-                const parsedInsights = JSON.parse(contextInsights);
+                const parsedInsights: Insight[] = JSON.parse(contextInsights);
                 setInsightsData(parsedInsights);
             } catch (error) {
                 console.error("Error parsing insights:", error);

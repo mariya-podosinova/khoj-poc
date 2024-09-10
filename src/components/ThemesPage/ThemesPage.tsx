@@ -4,13 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useFileContext } from '../../FileContext';
 import { createInsights } from '../../helpers/openaiInsightsHelper';
+import { FileContextType } from '../../types'; // Import types from your types file
 import './ThemesPage.css';
 
 const ThemesPage: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { themes, currentProject, setInsights, objectives } = useFileContext();
-    const [loading, setLoading] = useState(false);
+    const { themes, currentProject, setInsights, objectives } = useFileContext() as FileContextType; // Ensure type casting
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleCreateInsights = async () => {
         if (!themes || themes.length === 0) {
@@ -38,6 +39,7 @@ const ThemesPage: React.FC = () => {
         navigate(-1);
     };
 
+    // Group themes by broaderTheme
     const groupedThemes = themes.reduce((acc, theme) => {
         const existingTheme = acc.find(t => t.broaderTheme === theme.broaderTheme);
         if (existingTheme) {
@@ -46,7 +48,7 @@ const ThemesPage: React.FC = () => {
             acc.push({ broaderTheme: theme.broaderTheme, subThemes: [theme] });
         }
         return acc;
-    }, []);
+    }, [] as { broaderTheme: string, subThemes: { subTheme: string, code: string, occurrences: number }[] }[]);
 
     return (
         <div className="themes-page p-6">
