@@ -28,7 +28,7 @@ Please return the response in the following JSON format:
     {
       "background": "<background>",
       "demographics": {
-        "age": <age>,
+        "age": "<age>", // Ensure the age range is preserved, e.g., "25-35 years"
         "location": "<location>",
         "maritalStatus": "<maritalStatus>",
         "accessibility": "<accessibility>"
@@ -45,7 +45,7 @@ Please return the response in the following JSON format:
     {
       "background": "<background>",
       "demographics": {
-        "age": <age>,
+        "age": "<age>", // Ensure the age range is preserved, e.g., "30-40 years"
         "location": "<location>",
         "maritalStatus": "<maritalStatus>",
         "accessibility": "<accessibility>"
@@ -76,22 +76,34 @@ Please return the response in the following JSON format:
         const content = response.choices[0]?.message?.content || '';
         const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
         const jsonString = jsonMatch ? jsonMatch[1].trim() : content.trim();
-        const personaData = JSON.parse(jsonString) as { personas: Persona[] };
+        const personaData = JSON.parse(jsonString) as { personas: any[] };
 
-        if (personaData.personas.length !== 2) {
+        // Validate and adjust the JSON format
+        const personas = personaData.personas.map(p => ({
+            ...p,
+            demographics: {
+                ...p.demographics,
+                // Preserve age range as string
+                age: p.demographics.age || '',
+            },
+            name: '', // Temporarily set to empty, to be adjusted in the next step
+            role: '', // Temporarily set to empty, to be adjusted in the next step
+        })) as Persona[];
+
+        if (personas.length !== 2) {
             throw new Error("Expected exactly two personas in the response.");
         }
 
         // Manually set names and roles
-        personaData.personas[0].name = "Participant 1";
-        personaData.personas[0].role = "Primary persona";
-        personaData.personas[1].name = "Participant 2";
-        personaData.personas[1].role = "Secondary persona";
+        personas[0].name = "Participant 1";
+        personas[0].role = "Primary persona";
+        personas[1].name = "Participant 2";
+        personas[1].role = "Secondary persona";
 
-        return personaData;
+        return { personas };
     } catch (error) {
-      console.error("Error parsing OpenAI response:", error);
-      console.error("Response content (trimmed):", response.choices[0]?.message?.content?.trim());
-      throw new Error("Invalid JSON response from OpenAI");
+        console.error("Error parsing OpenAI response:", error);
+        console.error("Response content (trimmed):", response.choices[0]?.message?.content?.trim());
+        throw new Error("Invalid JSON response from OpenAI");
     }
 };

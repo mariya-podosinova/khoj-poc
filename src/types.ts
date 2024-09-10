@@ -22,7 +22,7 @@ export interface Persona {
     role: string;
     background: string;
     demographics: {
-        age: number;
+        age: string;
         location: string;
         maritalStatus: string;
         accessibility: string;

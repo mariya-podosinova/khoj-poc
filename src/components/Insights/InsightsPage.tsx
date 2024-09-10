@@ -39,7 +39,7 @@ const InsightsPage: React.FC = () => {
         setLoading(true);
         setTimeout(() => {
             navigate('/persona', { state: { project, insights: contextInsights } });
-        }, 2000); // Simulate a delay for loading indicator demonstration
+        }, 20000); // Simulate a delay for loading indicator demonstration
     };
 
     const handleBackClick = () => {
