@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFileContext } from '../../FileContext';
 import { createPersona } from '../../helpers/openaiPersonaHelper';
+import { Persona } from '../../types'; // Ensure Persona type is imported
 import './PersonaPage.css';
 
 const PersonaPage = () => {
     const { currentProject, insights, persona, setPersona } = useFileContext();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [imageUrls, setImageUrls] = useState<string[]>([]);
 
     useEffect(() => {
@@ -15,7 +16,7 @@ const PersonaPage = () => {
             try {
                 const response = await fetch('https://randomuser.me/api/?results=2');
                 const data = await response.json();
-                setImageUrls(data.results.map((result) => result.picture.large));
+                setImageUrls(data.results.map((result: { picture: { large: string } }) => result.picture.large));
             } catch (error) {
                 console.error('Error fetching images:', error);
             }
@@ -34,7 +35,7 @@ const PersonaPage = () => {
         try {
             const personaData = await createPersona(JSON.parse(insights));
             setPersona(personaData.personas); // Set both personas
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error creating persona:", error.message);
             alert("An error occurred while creating the persona. Check the console for more details.");
         } finally {
@@ -56,8 +57,8 @@ const PersonaPage = () => {
         navigate('/documents');
     };
 
-    const renderNeeds = (needs: string[]) => {
-        if (!Array.isArray(needs)) {
+    const renderNeeds = (needs: string[] | undefined) => {
+        if (!needs || !Array.isArray(needs)) {
             return <p>No needs data available</p>;
         }
         return needs.map((need, idx) => (
@@ -65,7 +66,7 @@ const PersonaPage = () => {
         ));
     };
 
-    if (!persona) {
+    if (!persona || persona.length === 0) {
         return (
             <div className="persona-page p-6">
                 <h1 className="text-2xl font-bold mb-2">Persona - {currentProject.name}</h1>
@@ -93,7 +94,7 @@ const PersonaPage = () => {
         <div className="persona-page p-6">
             <h1 className="text-2xl font-bold mb-2">Persona - {currentProject.name}</h1>
             <p className="text-gray-600 mb-6">Details of the project</p>
-            {persona.map((p, index) => (
+            {persona.map((p: Persona, index: number) => (
                 <div key={index} className="persona-container mb-12">
                     <h2 className="persona-title">
                         {p.name} - <span className="persona-role">{p.role}</span>

@@ -17,22 +17,6 @@ export interface File {
     researcher: string;
 }
 
-export const defaultPersona: Persona = {
-    name: "Participant 1",
-    role: "Primary persona",
-    background: "Participant 1 is a 38-year-old professional living in the heart of London with their spouse, Emily. As a high-ranking executive in a multinational corporation, Participant 1’s life is a blend of high-stakes business meetings, frequent travel, and quality time with family. They enjoy the cultural vibrancy of London, often attending theater performances, dining at upscale restaurants, and engaging in weekend getaways to the countryside.",
-    demographics: {
-        age: 38,
-        location: "London",
-        maritalStatus: "Married",
-        accessibility: "Glasses"
-    },
-    needs: "Performance: Demands top-tier performance with cutting-edge processors, significant RAM, and quick, responsive interfaces. Security: Prioritizes devices with advanced security measures such as facial recognition, fingerprint sensors, and end-to-end encryption. Camera: Requires a state-of-the-art camera system for high-resolution photos and videos, important for capturing moments with family and for professional purposes. Durability: Looks for a sturdy, water-resistant, and drop-proof device that can endure a hectic lifestyle. Style: Prefers a sleek, sophisticated design with premium materials that reflect professional status.",
-    goals: "Efficiency: Seeks to enhance productivity and streamline tasks through a powerful and reliable device. Connectivity: Needs seamless connectivity to stay in touch with an international team, clients, and family. Sustainability: Motivated by a desire to reduce carbon footprint and contribute to environmental conservation by recycling old devices.",
-    painPoints: "Performance Lag: Annoyed by any form of lag or slow performance, especially during critical tasks. Battery Life: Finds short battery life disruptive to back-to-back meetings and travel. Security Concerns: Concerned about the security of sensitive business information and personal data. Environmental Impact: Conscious of the negative impact of electronic waste, prefers sustainable options.",
-    socialMedia: "LinkedIn, Twitter"
-};
-
 export interface Persona {
     name: string;
     role: string;
@@ -43,7 +27,7 @@ export interface Persona {
         maritalStatus: string;
         accessibility: string;
     };
-    needs: string;
+    needs: string[]; 
     goals: string;
     painPoints: string;
     socialMedia: string;
