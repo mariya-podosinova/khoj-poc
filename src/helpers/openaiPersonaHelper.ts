@@ -56,7 +56,7 @@ Please return the response in the following JSON format:
     ];
 
     const requestBody = {
-        model: "gpt-4o-mini",
+        model: "gpt-3.5-turbo",
         messages: messages,
         max_tokens: 1000, // Adjust token limit as needed
     };

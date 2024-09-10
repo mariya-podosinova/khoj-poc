@@ -5,6 +5,13 @@ const openai = new OpenAI({
     dangerouslyAllowBrowser: true,
 });
 
+// Define the message type manually
+type ChatCompletionRequestMessage = {
+    role: "system" | "user" | "assistant"; // These are the valid roles
+    content: string;
+    name?: string; // 'name' field is optional, only needed for certain user roles
+};
+
 export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, delay = 1000): Promise<any> => {
     try {
         return await fn();
@@ -18,20 +25,22 @@ export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, dela
 export const createThemes = async (extractedTexts: string[], objective: string): Promise<{ broaderTheme: string, subTheme: string, code: string, occurrences: number }[]> => {
     const themes = [];
     for (const extractedText of extractedTexts) {
-        const messages = [
+        // Use the manually defined type for messages
+        const messages: ChatCompletionRequestMessage[] = [
             { role: "system", content: "You are a helpful assistant." },
             {
-                role: "user", content: `Based on the analysis of the transcripts, create a JSON array where each object has the following fields:
+                role: "user",
+                content: `Based on the analysis of the transcripts, create a JSON array where each object has the following fields:
                 - "broaderTheme": A general category encompassing multiple related sub-themes.
                 - "subTheme": Specific themes that fall under the broader category.
                 - "code": Detailed reasons or actions mentioned by participants that illustrate the sub-themes.
                 - "occurrences": The number of times this theme was mentioned.
                 The array should be based on the following objective: ${objective}. Here is the transcript: ${extractedText}`
-            },
+            }
         ];
 
         const requestBody = {
-            model: "gpt-4o-mini",
+            model: "gpt-3.5-turbo",  // Correct model name
             messages: messages,
             max_tokens: 800, 
             temperature: 0.7 
