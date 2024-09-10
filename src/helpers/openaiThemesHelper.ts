@@ -1,5 +1,4 @@
-import { OpenAI } from 'openai';
-import { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
+import OpenAI from 'openai';
 
 const openai = new OpenAI({
     apiKey: import.meta.env.VITE_OPENAI_API_KEY,
@@ -17,7 +16,7 @@ export const retryWithBackoff = async (fn: () => Promise<any>, retries = 5, dela
 };
 
 export const createThemes = async (extractedTexts: string[], objective: string): Promise<{ broaderTheme: string, subTheme: string, code: string, occurrences: number }[]> => {
-    const themes = [];
+    const themes: { broaderTheme: string, subTheme: string, code: string, occurrences: number }[] = [];
     for (const extractedText of extractedTexts) {
         const messages = [
             { role: "system", content: "You are a helpful assistant." },
@@ -33,12 +32,17 @@ export const createThemes = async (extractedTexts: string[], objective: string):
 
         const requestBody = {
             model: "gpt-3.5-turbo",
-            messages: messages as Array<ChatCompletionMessageParam>, // Type assertion to match expected type
+            messages: messages,
             max_tokens: 800, 
             temperature: 0.7 
         };
 
-        const response = await retryWithBackoff(() => openai.chat.completions.create(requestBody));
+        const response = await retryWithBackoff(() => openai.chat.completions.create({
+            model: requestBody.model,
+            messages: requestBody.messages,
+            max_tokens: requestBody.max_tokens,
+            temperature: requestBody.temperature
+        }));
 
         let responseData;
         try {

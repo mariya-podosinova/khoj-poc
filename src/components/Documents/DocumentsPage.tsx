@@ -4,11 +4,12 @@ import { jsPDF } from 'jspdf';
 import './DocumentsPage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { FileContextType, defaultPersona } from '../../types'; // Import defaultPersona
 
 const DocumentsPage: React.FC = () => {
-    const { persona, insights, currentProject } = useFileContext();
+    const { persona, insights, currentProject } = useFileContext() as FileContextType;
 
-    const generatePDF = (title, contentCallback, fileName) => {
+    const generatePDF = (title: string, contentCallback: (doc: jsPDF, addContent: (title: string, content: string, startY: number) => number, startY: number) => void, fileName: string) => {
         const doc = new jsPDF();
         const marginLeft = 10;
         const marginTop = 10;
@@ -20,10 +21,10 @@ const DocumentsPage: React.FC = () => {
 
         let currentY = marginTop + 20;
 
-        const addContent = (title, content, startY) => {
+        const addContent = (title: string, content: string, startY: number) => {
             doc.setFontSize(16);
             const titleLines = doc.splitTextToSize(title, maxLineWidth);
-            titleLines.forEach((line) => {
+            titleLines.forEach((line: any) => {
                 if (startY > 280) {
                     doc.addPage();
                     startY = marginTop + lineHeight;
@@ -34,7 +35,7 @@ const DocumentsPage: React.FC = () => {
 
             doc.setFontSize(12);
             const contentLines = doc.splitTextToSize(content, maxLineWidth);
-            contentLines.forEach((line) => {
+            contentLines.forEach((line: any) => {
                 if (startY > 280) {
                     doc.addPage();
                     startY = marginTop + lineHeight;
@@ -50,7 +51,7 @@ const DocumentsPage: React.FC = () => {
         doc.save(fileName);
     };
 
-    const handleDownloadPersona = (persona, participantNumber) => {
+    const handleDownloadPersona = (persona: typeof defaultPersona, participantNumber: number) => {
         generatePDF(
             `Participant ${participantNumber}`,
             (doc, addContent, currentY) => {
@@ -76,7 +77,7 @@ const DocumentsPage: React.FC = () => {
             'Project Insights',
             (doc, addContent, currentY) => {
                 const insightsData = JSON.parse(insights);
-                insightsData.forEach((insight, index) => {
+                insightsData.forEach((insight: { broaderTheme: string; subThemes: { subTheme: string; code: string; occurrences: number }[]; keyInsight: string }, index: number) => {
                     currentY = addContent(`Insight ${index + 1}: ${insight.broaderTheme}`, '', currentY);
                     insight.subThemes.forEach((subTheme) => {
                         currentY = addContent(

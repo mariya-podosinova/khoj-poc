@@ -46,8 +46,8 @@ export interface FileContextType {
     setCurrentProject: React.Dispatch<React.SetStateAction<Project>>;
     extractedText: string;
     setExtractedText: React.Dispatch<React.SetStateAction<string>>;
-    themes: { broaderTheme: string, subTheme: string, code: string, occurrences: number }[];
-    setThemes: React.Dispatch<React.SetStateAction<{ broaderTheme: string, subTheme: string, code: string, occurrences: number }[]>>;
+    themes: { broaderTheme: string; subTheme: string; code: string; occurrences: number }[];
+    setThemes: React.Dispatch<React.SetStateAction<{ broaderTheme: string; subTheme: string; code: string; occurrences: number }[]>>;
     insights: string;
     setInsights: React.Dispatch<React.SetStateAction<string>>;
     persona: typeof defaultPersona;
